@@ -1,8 +1,11 @@
+import { PrismaClient } from "@prisma/client";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
+
+const prisma = new PrismaClient();
 
 const PORT = Number(process.env.APP_PORT);
 const ORIGIN = process.env.APP_BE_ORIGIN;
@@ -21,7 +24,8 @@ app.use(
 );
 
 app.get("/", async (req, res) => {
-  res.json("Hello from Auth Server!");
+  const users = await prisma.user.findMany();
+  res.json(users);
 });
 
 app.get("/auth/login", async (req, res) => {
